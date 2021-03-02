@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -58,6 +61,12 @@ public class AlertController {
     public Alert createAlert(@RequestBody Alert alert,
             HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Start create alert {}", alert.getName());
+        var factory = Validation.buildDefaultValidatorFactory();
+        var validator = factory.getValidator();
+        var constraints = validator.validate(alert);
+        if (constraints.size() >0) {
+            throw new ConstraintViolationException(constraints);
+        }
         return alert;
     }
 }

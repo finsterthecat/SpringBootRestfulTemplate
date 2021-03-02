@@ -35,9 +35,9 @@ public class ControllerExceptionHandler {
             EntityNotFoundException enfException, WebRequest req) {
         var apiError = new ApiError(NOT_FOUND
                 , "Resource not found"
-                , new ApiError.Error(Alert.class.getName()
+                , new ApiError.Error(String.format("%s not found", enfException.getMessage())
                         , "*"
-                        , "Alert not found")
+                        , String.format("Resource not found"))
         );
         return new ResponseEntity<>(apiError
                 , new HttpHeaders()
